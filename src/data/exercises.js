@@ -1,5 +1,6 @@
-const exercises = [
-  {
+export const exercises = {
+
+  comandos_basicos:[{
     id: "ex_1",
     prompt: "Exercise 1: Set it to daytime mode",
     xp: 10,
@@ -10,7 +11,7 @@ const exercises = [
     id: "ex_2",
     prompt: "Exercise 2: Set it your gamemode to creative",
     xp: 10,
-    accepted: ["/gamemode creative", "gamemode 1"],
+    accepted: ["/gamemode creative", "/gamemode 1"],
     hint: "It is the same command to set your gamemode to survival",
   },
   {
@@ -26,10 +27,10 @@ const exercises = [
     xp: 10,
     accepted: ["/difficulty hard"],
     hint: "Difficulty options are peaceful, easy, normal, and hard.",
-  },
+  }],
 
   // entidades — 4
-  {
+  entidades:[{
     id: "en_1",
     prompt: "Entities 1: Summon a zombie at your exact position",
     xp: 15,
@@ -59,10 +60,10 @@ const exercises = [
     xp: 15,
     accepted: ["/effect clear @s"],
     hint: "/effect clear removes every active effect from the target in one command.",
-  },
+  }],
 
   // movimiento — 4
-  {
+  movimiento:[{
     id: "mv_1",
     prompt: "Movement 1: Teleport 5 blocks straight up from where you are",
     xp: 15,
@@ -94,10 +95,10 @@ const exercises = [
       "/teleport @s 0 70 0 facing 100 64 -200",
     ],
     hint: "Add 'facing <x> <y> <z>' after the destination to control which direction you look.",
-  },
+  }],
 
   // construccion — 4
-  {
+  construccion:[{
     id: "cn_1",
     prompt: "Building 1: Place a stone block at coordinates 10 64 10",
     xp: 10,
@@ -135,7 +136,6 @@ const exercises = [
       "/fill 0 64 0 5 66 5 minecraft:glass replace air",
     ],
     hint: "Add 'replace <block>' at the end of /fill so it only touches blocks matching that type, leaving everything else untouched.",
-  },
-];
+  }]
+}
 
-export default exercises;
