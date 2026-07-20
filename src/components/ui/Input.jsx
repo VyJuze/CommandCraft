@@ -1,4 +1,5 @@
 export const Input = ({
+  type = "text",
   value,
   onChange,
   onKeyDown,
@@ -7,7 +8,7 @@ export const Input = ({
 }) => {
   return (
     <input
-      type="text"
+      type={type}
       value={value}
       onChange={onChange}
       onKeyDown={onKeyDown}

@@ -1,61 +1,122 @@
-import {createContext, useContext, useEffect, useReducer} from "react";
-import { useLocalStorage } from '../hooks/useLocalStorage';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
+import { supabase } from "../lib/supabase";
 
-
-const GameContext = createContext(null)
+const GameContext = createContext(null);
 
 const initialState = {
   completedExercises: {
     comandos_basicos: [],
     entidades: [],
     movimiento: [],
-    construccion:[]
-  }
+    construccion: [],
+  },
+};
 
-  
-}
-
-const reducer = (state, action) => {
+function reducer(state, action) {
   switch (action.type) {
-    case "completeExercise":{
-      const {category, exerciseId} = action.payload
-      if (state.completedExercises[category].includes(exerciseId)) return state
+    case "completeExercise": {
+      const { category, exerciseId } = action.payload;
+      if (state.completedExercises[category].includes(exerciseId)) return state;
       return {
-        ...state, 
+        ...state,
         completedExercises: {
           ...state.completedExercises,
           [category]: [...state.completedExercises[category], exerciseId],
-        }
-      }
+        },
+      };
     }
-    case "resetProgress" : {
-      return initialState 
-    }
+    case "loadProgress":
+      return { ...state, completedExercises: action.payload };
+    case "resetProgress":
+      return initialState;
     default:
-      return state
+      return state;
   }
 }
 
-export const GameProvider = ({children} ) => {
-  const [persisted, setPersisted] = useLocalStorage('mc-logic-progress', initialState)
-  const [state, dispatch] = useReducer(reducer, persisted)
+export const GameProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const [userId, setUserId] = useState(null);
+  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
-    setPersisted(state)
-  }, [state])
+    const loadProgress = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session?.user) return;
+
+      setUserId(session.user.id);
+
+      const { data, error } = await supabase
+        .from("progreso")
+        .select("completed_exercises")
+        .eq("user_id", session.user.id)
+        .single();
+
+      if (data && !error) {
+        dispatch({ type: "loadProgress", payload: data.completed_exercises });
+      }
+    };
+
+    loadProgress();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        setUserId(session.user.id);
+        const { data } = await supabase
+          .from("progreso")
+          .select("completed_exercises")
+          .eq("user_id", session.user.id)
+          .single();
+        if (data)
+          dispatch({ type: "loadProgress", payload: data.completed_exercises });
+      } else {
+        setUserId(null);
+        dispatch({ type: "resetProgress" });
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
+
+    const save = async () => {
+      setSyncing(true);
+      await supabase.from("progreso").upsert(
+        {
+          user_id: userId,
+          completed_exercises: state.completedExercises,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id" },
+      );
+      setSyncing(false);
+    };
+
+    save();
+  }, [state.completedExercises, userId]);
 
   return (
-    <GameContext.Provider value={{state,dispatch}}>
+    <GameContext.Provider value={{ state, dispatch, syncing }}>
       {children}
     </GameContext.Provider>
-  )
-
-}
+  );
+};
 
 export const useGame = () => {
-  const context = useContext(GameContext)
-  if (!context){
-    throw new Error("useGame must be used within a GameProvider")
-  }
-  return context
-}
+  const context = useContext(GameContext);
+  if (!context)
+    throw new Error("useGame debe usarse dentro de un GameProvider");
+  return context;
+};
