@@ -44,13 +44,18 @@ export const GameProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [userId, setUserId] = useState(null);
   const [syncing, setSyncing] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const loadProgress = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      if (!session?.user) return;
+
+      if (!session?.user) {
+        setLoaded(true);
+        return;
+      }
 
       setUserId(session.user.id);
 
@@ -63,6 +68,8 @@ export const GameProvider = ({ children }) => {
       if (data && !error) {
         dispatch({ type: "loadProgress", payload: data.completed_exercises });
       }
+
+      setLoaded(true);
     };
 
     loadProgress();
@@ -72,15 +79,20 @@ export const GameProvider = ({ children }) => {
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session?.user) {
         setUserId(session.user.id);
+
         const { data } = await supabase
           .from("progreso")
           .select("completed_exercises")
           .eq("user_id", session.user.id)
           .single();
-        if (data)
+
+        if (data) {
           dispatch({ type: "loadProgress", payload: data.completed_exercises });
+          setLoaded(true);
+        }
       } else {
         setUserId(null);
+        setLoaded(false);
         dispatch({ type: "resetProgress" });
       }
     });
@@ -89,7 +101,7 @@ export const GameProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || !loaded) return;
 
     const save = async () => {
       setSyncing(true);
@@ -105,7 +117,7 @@ export const GameProvider = ({ children }) => {
     };
 
     save();
-  }, [state.completedExercises, userId]);
+  }, [state.completedExercises, userId, loaded]);
 
   return (
     <GameContext.Provider value={{ state, dispatch, syncing }}>
