@@ -13,13 +13,12 @@ const CATEGORY_CONFIG = {
     label: "Basic Commmands",
     subtitle: "Learn the essential commands",
     image: img_basic,
-
   },
   entidades: {
     label: "Entities",
     subtitle: "Mobs and summons",
     image: entiti_image,
-
+    
   },
   movimiento: {
     label: "Movement",

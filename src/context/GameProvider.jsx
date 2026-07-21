@@ -13,7 +13,7 @@ const initialState = {
   completedExercises: {
     comandos_basicos: [],
     entidades: [],
-    movimiento: [],
+    movimiento: [], 
     construccion: [],
   },
 };
