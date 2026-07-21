@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
+import HomeWallpaper from "../assets/HomeWallpaper.png"
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export const Home = () => {
     <div className="relative h-screen flex justify-center items-center overflow-hidden">
       <div
         className="absolute inset-0 bg-cover bg-center opacity-60"
-        style={{ backgroundImage: "url('src/assets/HomeWallpaper.png')" }}
+        style={{ backgroundImage: `url(${HomeWallpaper})` }}
       />
       <div className="relative bg-transparent p-8 flex flex-col justify-around w-2/4">
         <h1 className="text-8xl font-monospace font-bold mb-4 text-center text-primarioverde text-shadow-black text-shadow-md">

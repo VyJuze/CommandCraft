@@ -4,6 +4,8 @@ import { LevelCard } from "../components/ui/LevelCard.jsx";
 import { getTotalXpByCategory } from "../utils/xpSystem.js";
 import { motion } from "motion/react";
 
+
+
 export const Levels = () => {
   const { state, dispatch } = useGame();
   const categories = Object.keys(exercises);

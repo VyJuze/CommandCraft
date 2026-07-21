@@ -3,29 +3,33 @@ import { motion } from "motion/react"
 import { exercises } from "../../data/exercises.js"
 import { CompletionBar } from "./CompletionBar.jsx"
 import {Button} from "./Button.jsx"
+import building_image from "../../assets/building_image.jpg";
+import entiti_image from "../../assets/entiti_image.jpg";
+import img_basic from "../../assets/img_basic.jpg"
+import movement_image from "../../assets/movement_image.jpg"
 
 const CATEGORY_CONFIG = {
   "comandos_basicos": {
     label: "Basic Commmands",
     subtitle: "Learn the essential commands",
-    image: "src/assets/img_basic.jpg",
+    image: img_basic,
 
   },
   entidades: {
     label: "Entities",
     subtitle: "Mobs and summons",
-    image: "src/assets/entiti_image.jpg",
+    image: entiti_image,
 
   },
   movimiento: {
     label: "Movement",
     subtitle: "Teleport and navigate",
-    image: "src/assets/movement_image.jpg"
+    image: movement_image
   },
   construccion:{
     label: "Building",
     subtitle: "Fill, clone and place",
-    image: "src/assets/building_image.jpg"
+    image: building_image
   }
 
 }

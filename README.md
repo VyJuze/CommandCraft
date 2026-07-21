@@ -11,7 +11,7 @@ Progress persistence — progress saved per user via Supabase
 Auth — email and password authentication
 
 
-Tech Stack
+Tech Stack 
 React + JavaScript
 Tailwind CSS v4
 React Router v7
