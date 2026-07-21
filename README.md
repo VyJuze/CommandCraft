@@ -21,3 +21,9 @@ The requisites to clone the proyect are:
 Node.js 22+ and a Supabase project with the progreso table and RLS configured
 
 My proyect (url demo) uses supabase but to clone the repo and run in local i have a file to use localStoradge and no supabase
+
+Installation
+git clone https://github.com/your-username/mc-logic.git
+cd mc-logic
+npm install 
+:)
